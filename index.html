@@ -20,6 +20,7 @@
             <li><a href="#home">Главная</a></li>
             <li><a href="#about">О нас</a></li>
             <li><a href="#projects">Проекты</a></li>
+			<li><a href="#gallery">Галерея</a></li>
             <li><a href="#contact">Контакты</a></li>
         </ul>
         <div class="burger">
@@ -87,6 +88,12 @@
             </div>
         </div>
     </section>
+	
+	<!-- Галерея -->
+	<section id="gallery" class="section">
+		<h2 class="section-title">Галерея</h2>
+		<div class="gallery-grid" id="gallery"></div>
+	</section>
 
     <!-- Контакты -->
     <section id="contact" class="section">
@@ -109,6 +116,7 @@
             </form>
         </div>
     </section>
+
 
     <!-- Футер -->
     <footer class="footer">
@@ -154,6 +162,101 @@
         document.querySelectorAll('.about-card, .project-card').forEach(el => {
             observer.observe(el);
         });
+			// ===== ГАЛЕРЕЯ =====
+	const galleryData = [
+		{
+			src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Vladimir_Putin_%282023-06-14%29_01.jpg/800px-Vladimir_Putin_%282023-06-14%29_01.jpg',
+			title: 'Президент России'
+		},
+		{
+			src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Vladimir_Putin_%282022-03-16%29_02.jpg/800px-Vladimir_Putin_%282022-03-16%29_02.jpg',
+			title: 'Официальное фото'
+		},
+		{
+			src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Vladimir_Putin_and_Recep_Tayyip_Erdoğan_%282022-09-16%29_01.jpg/800px-Vladimir_Putin_and_Recep_Tayyip_Erdoğan_%282022-09-16%29_01.jpg',
+			title: 'На встрече'
+		},
+		{
+			src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Vladimir_Putin_%282023-05-09%29_02.jpg/800px-Vladimir_Putin_%282023-05-09%29_02.jpg',
+			title: 'Парад Победы'
+		},
+		{
+			src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Vladimir_Putin_%282022-02-22%29_02.jpg/800px-Vladimir_Putin_%282022-02-22%29_02.jpg',
+			title: 'Рабочая встреча'
+		},
+		{
+			src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Vladimir_Putin_%282023-03-10%29_01.jpg/800px-Vladimir_Putin_%282023-03-10%29_01.jpg',
+			title: 'Выступление'
+		}
+	];
+
+	// Создание галереи
+	const galleryContainer = document.getElementById('gallery');
+
+	galleryData.forEach((photo, index) => {
+		const galleryItem = document.createElement('div');
+		galleryItem.className = 'gallery-item';
+		galleryItem.style.opacity = '0';
+		galleryItem.style.transform = 'translateY(30px)';
+		
+		galleryItem.innerHTML = `
+			<img src="${photo.src}" alt="${photo.title}" loading="lazy">
+			<div class="gallery-overlay">
+				<h3>${photo.title}</h3>
+			</div>
+		`;
+		
+		// Открытие модального окна
+		galleryItem.addEventListener('click', () => {
+			openModal(photo.src);
+		});
+		
+		galleryContainer.appendChild(galleryItem);
+		
+		// Анимация появления
+		setTimeout(() => {
+			galleryItem.style.transition = 'all 0.6s ease';
+			galleryItem.style.opacity = '1';
+			galleryItem.style.transform = 'translateY(0)';
+		}, index * 100);
+	});
+
+	// Модальное окно
+	function openModal(src) {
+		let modal = document.querySelector('.modal');
+		
+		if (!modal) {
+			modal = document.createElement('div');
+			modal.className = 'modal';
+			modal.innerHTML = `
+				<span class="modal-close">&times;</span>
+				<img src="" alt="Полноразмерное фото">
+			`;
+			document.body.appendChild(modal);
+			
+			// Закрытие по клику на крестик
+			modal.querySelector('.modal-close').addEventListener('click', () => {
+				modal.classList.remove('active');
+			});
+			
+			// Закрытие по клику вне фото
+			modal.addEventListener('click', (e) => {
+				if (e.target === modal) {
+					modal.classList.remove('active');
+				}
+			});
+			
+			// Закрытие по Escape
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && modal.classList.contains('active')) {
+					modal.classList.remove('active');
+				}
+			});
+		}
+		
+		modal.querySelector('img').src = src;
+		modal.classList.add('active');
+	}
     </script>
 </body>
 </html>
