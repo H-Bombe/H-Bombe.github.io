@@ -1,7 +1,159 @@
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-BOMBE</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
 <body>
-<h1> YO-O-o--o-o-o-o-o--o</h1>
-<h2> BEEEEEE</h2>
+
+    <!-- Фоновая анимация -->
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="logo">H-BOMBE</div>
+        <ul class="nav-links">
+            <li><a href="#home">Главная</a></li>
+            <li><a href="#about">О нас</a></li>
+            <li><a href="#projects">Проекты</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+        <div class="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="H-BOMBE">H-BOMBE</h1>
+            <p class="subtitle">Создаём цифровое будущее</p>
+            <a href="#projects" class="btn-neon">Смотреть проекты</a>
+        </div>
+        <div class="scroll-indicator">
+            <span>↓</span>
+        </div>
+    </section>
+
+    <!-- О нас -->
+    <section id="about" class="section">
+        <h2 class="section-title">О нас</h2>
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="icon">⚡</div>
+                <h3>Скорость</h3>
+                <p>Молниеносная производительность и оптимизация каждого проекта</p>
+            </div>
+            <div class="about-card">
+                <div class="icon"></div>
+                <h3>Дизайн</h3>
+                <p>Современный и уникальный визуальный стиль для каждого решения</p>
+            </div>
+            <div class="about-card">
+                <div class="icon">🔒</div>
+                <h3>Надёжность</h3>
+                <p>Безопасность и стабильность — наши главные приоритеты</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Проекты -->
+    <section id="projects" class="section">
+        <h2 class="section-title">Проекты</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-number">01</div>
+                <h3>Cyber Platform</h3>
+                <p>Платформа нового поколения с AI-интеграцией</p>
+                <a href="#" class="btn-small">Подробнее →</a>
+            </div>
+            <div class="project-card">
+                <div class="project-number">02</div>
+                <h3>Neural Engine</h3>
+                <p>Нейросетевой движок для обработки данных</p>
+                <a href="#" class="btn-small">Подробнее →</a>
+            </div>
+            <div class="project-card">
+                <div class="project-number">03</div>
+                <h3>Quantum UI</h3>
+                <p>Интерфейс будущего с квантовой анимацией</p>
+                <a href="#" class="btn-small">Подробнее →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contact" class="section">
+        <h2 class="section-title">Контакты</h2>
+        <div class="contact-wrapper">
+            <form class="contact-form">
+                <div class="input-group">
+                    <input type="text" required>
+                    <label>Имя</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-group">
+                    <textarea required></textarea>
+                    <label>Сообщение</label>
+                </div>
+                <button type="submit" class="btn-neon">Отправить</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <p>© 2026 H-BOMBE. Все права защищены.</p>
+        <div class="social-links">
+            <a href="#">GitHub</a>
+            <a href="#">Telegram</a>
+            <a href="#">Discord</a>
+        </div>
+    </footer>
+
+    <script>
+        // Генерация частиц
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.width = (Math.random() * 3 + 1) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Бургер-меню
+        const burger = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('toggle');
+        });
+
+        // Плавное появление элементов
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.about-card, .project-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
