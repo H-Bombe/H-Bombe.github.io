@@ -9,18 +9,16 @@
 </head>
 <body>
 
-    <!-- Фоновая анимация -->
     <div class="bg-animation"></div>
     <div class="particles" id="particles"></div>
 
-    <!-- Навигация -->
     <nav class="navbar">
         <div class="logo">H-BOMBE</div>
         <ul class="nav-links">
             <li><a href="#home">Главная</a></li>
             <li><a href="#about">О нас</a></li>
             <li><a href="#projects">Проекты</a></li>
-			<li><a href="#gallery">Галерея</a></li>
+            <li><a href="#gallery">Галерея</a></li>
             <li><a href="#contact">Контакты</a></li>
         </ul>
         <div class="burger">
@@ -30,7 +28,6 @@
         </div>
     </nav>
 
-    <!-- Главный экран -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1 class="glitch" data-text="H-BOMBE">H-BOMBE</h1>
@@ -42,7 +39,6 @@
         </div>
     </section>
 
-    <!-- О нас -->
     <section id="about" class="section">
         <h2 class="section-title">О нас</h2>
         <div class="about-grid">
@@ -64,7 +60,6 @@
         </div>
     </section>
 
-    <!-- Проекты -->
     <section id="projects" class="section">
         <h2 class="section-title">Проекты</h2>
         <div class="projects-grid">
@@ -88,28 +83,27 @@
             </div>
         </div>
     </section>
-	
-	<!-- Галерея -->
-	<section id="gallery" class="section">
-		<h2 class="section-title">Галерея</h2>
-		<div class="gallery-grid" id="gallery"></div>
-	</section>
 
-    <!-- Контакты -->
+    <!-- ГАЛЕРЕЯ -->
+    <section id="gallery" class="section">
+        <h2 class="section-title">Галерея</h2>
+        <div class="gallery-grid" id="gallery"></div>
+    </section>
+
     <section id="contact" class="section">
         <h2 class="section-title">Контакты</h2>
         <div class="contact-wrapper">
             <form class="contact-form">
                 <div class="input-group">
-                    <input type="text" required>
+                    <input type="text" required placeholder=" ">
                     <label>Имя</label>
                 </div>
                 <div class="input-group">
-                    <input type="email" required>
+                    <input type="email" required placeholder=" ">
                     <label>Email</label>
                 </div>
                 <div class="input-group">
-                    <textarea required></textarea>
+                    <textarea required placeholder=" "></textarea>
                     <label>Сообщение</label>
                 </div>
                 <button type="submit" class="btn-neon">Отправить</button>
@@ -117,8 +111,6 @@
         </div>
     </section>
 
-
-    <!-- Футер -->
     <footer class="footer">
         <p>© 2026 H-BOMBE. Все права защищены.</p>
         <div class="social-links">
@@ -129,7 +121,7 @@
     </footer>
 
     <script>
-        // Генерация частиц
+        // Частицы
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
@@ -142,7 +134,7 @@
             particlesContainer.appendChild(particle);
         }
 
-        // Бургер-меню
+        // Бургер
         const burger = document.querySelector('.burger');
         const navLinks = document.querySelector('.nav-links');
         burger.addEventListener('click', () => {
@@ -150,7 +142,7 @@
             burger.classList.toggle('toggle');
         });
 
-        // Плавное появление элементов
+        // Появление элементов
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -162,101 +154,64 @@
         document.querySelectorAll('.about-card, .project-card').forEach(el => {
             observer.observe(el);
         });
-			// ===== ГАЛЕРЕЯ =====
-	const galleryData = [
-		{
-			src: 'https://cdn.bfm.ru/news/photopreviewextralarge/2025/12/25/tass_86699057.jpg',
-			title: 'Президент России'
-		},
-		{
-			src: 'https://avatars.mds.yandex.net/get-mpic/16406747/2a0000019958aa22351293b0c91110cba4f0/orig',
-			title: 'Официальное фото'
-		},
-		{
-			src: 'https://avatars.mds.yandex.net/i?id=a6e7d29ed409e66109d8c13034067f22_l-9878235-images-thumbs&n=13',
-			title: 'На встрече'
-		},
-		{
-			src: 'https://static.life.ru/ip/unsafe/rs:fit:1200:/q:98/sh:0.5/czM6Ly9saWZlLXN0YXRpYy9wdWJsaWNhdGlvbnMvMjAyNS81LzkvNjQ4OTExMDkwNjkzLjEzNzUud2VicA==.webp',
-			title: 'Парад Победы'
-		},
-		{
-			src: 'https://avatars.mds.yandex.net/i?id=e1535042d513a660b02e391e6d98b4ad_l-5273391-images-thumbs&n=13',
-			title: 'Рабочая встреча'
-		},
-		{
-			src: 'https://img5tv.cdnvideo.ru/webp/shared/files/202411/1_2137112.jpg',
-			title: 'Выступление'
-		}
-	];
 
-	// Создание галереи
-	const galleryContainer = document.getElementById('gallery');
+        // ===== ГАЛЕРЕЯ =====
+        const galleryData = [
+            { src: 'images/putin1.jpg', title: 'Президент России' },
+            { src: 'images/putin2.jpg', title: 'Официальное фото' },
+            { src: 'images/putin3.jpg', title: 'На встрече' },
+            { src: 'images/putin4.jpg', title: 'Парад Победы' },
+            { src: 'images/putin5.jpg', title: 'Рабочая встреча' },
+            { src: 'images/putin6.jpg', title: 'Выступление' }
+        ];
 
-	galleryData.forEach((photo, index) => {
-		const galleryItem = document.createElement('div');
-		galleryItem.className = 'gallery-item';
-		galleryItem.style.opacity = '0';
-		galleryItem.style.transform = 'translateY(30px)';
-		
-		galleryItem.innerHTML = `
-			<img src="${photo.src}" alt="${photo.title}" loading="lazy">
-			<div class="gallery-overlay">
-				<h3>${photo.title}</h3>
-			</div>
-		`;
-		
-		// Открытие модального окна
-		galleryItem.addEventListener('click', () => {
-			openModal(photo.src);
-		});
-		
-		galleryContainer.appendChild(galleryItem);
-		
-		// Анимация появления
-		setTimeout(() => {
-			galleryItem.style.transition = 'all 0.6s ease';
-			galleryItem.style.opacity = '1';
-			galleryItem.style.transform = 'translateY(0)';
-		}, index * 100);
-	});
+        const galleryContainer = document.getElementById('gallery');
 
-	// Модальное окно
-	function openModal(src) {
-		let modal = document.querySelector('.modal');
-		
-		if (!modal) {
-			modal = document.createElement('div');
-			modal.className = 'modal';
-			modal.innerHTML = `
-				<span class="modal-close">&times;</span>
-				<img src="" alt="Полноразмерное фото">
-			`;
-			document.body.appendChild(modal);
-			
-			// Закрытие по клику на крестик
-			modal.querySelector('.modal-close').addEventListener('click', () => {
-				modal.classList.remove('active');
-			});
-			
-			// Закрытие по клику вне фото
-			modal.addEventListener('click', (e) => {
-				if (e.target === modal) {
-					modal.classList.remove('active');
-				}
-			});
-			
-			// Закрытие по Escape
-			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape' && modal.classList.contains('active')) {
-					modal.classList.remove('active');
-				}
-			});
-		}
-		
-		modal.querySelector('img').src = src;
-		modal.classList.add('active');
-	}
+        galleryData.forEach((photo, index) => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `
+                <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+                <div class="gallery-overlay">
+                    <h3>${photo.title}</h3>
+                </div>
+            `;
+            item.addEventListener('click', () => openModal(photo.src));
+            galleryContainer.appendChild(item);
+
+            setTimeout(() => {
+                item.style.transition = 'all 0.6s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        function openModal(src) {
+            let modal = document.querySelector('.modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <span class="modal-close">&times;</span>
+                    <img src="" alt="Полноразмерное фото">
+                `;
+                document.body.appendChild(modal);
+
+                modal.querySelector('.modal-close').addEventListener('click', () => {
+                    modal.classList.remove('active');
+                });
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.classList.remove('active');
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) {
+                        modal.classList.remove('active');
+                    }
+                });
+            }
+            modal.querySelector('img').src = src;
+            modal.classList.add('active');
+        }
     </script>
 </body>
 </html>
