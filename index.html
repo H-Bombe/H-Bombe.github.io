@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Firebase + GitHub Auth</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        input { padding: 8px; margin-right: 10px; margin-bottom: 10px; width: 200px; }
+        button { padding: 8px 15px; cursor: pointer; color: white; border: none; border-radius: 4px; margin-bottom: 10px; }
+        .btn-green { background-color: #24b47e; }
+        .btn-green:hover { background-color: #1a9a6a; }
+        .btn-github { background-color: #24292e; }
+        .btn-github:hover { background-color: #444d56; }
+        .btn-red { background-color: #dc3545; }
+        .btn-red:hover { background-color: #c82333; }
+        
+        #userList { list-style-type: none; padding: 0; }
+        #userList li { background: #f4f4f4; margin: 5px 0; padding: 8px; border-radius: 4px; }
+        .section { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- СЕКЦИЯ 1: АВТОРИЗАЦИЯ (Безопасный вход) -->
+    <div class="section">
+        <h2>🔐 Авторизация</h2>
+        <p id="authStatus">Статус: Не авторизован</p>
+        <button id="githubLoginBtn" class="btn-github">Войти через GitHub</button>
+        <button id="logoutBtn" class="btn-red hidden">Выйти</button>
+    </div>
+
+    <hr>
+
+    <!-- СЕКЦИЯ 2: ТЕСТ БАЗЫ ДАННЫХ (Простая запись) -->
+    <div class="section">
+        <h2>📝 Тест записи в базу данных (Firestore)</h2>
+        <input type="text" id="usernameInput" placeholder="Имя пользователя">
+        <input type="text" id="passwordInput" placeholder="Пароль">
+        <button id="registerBtn" class="btn-green">Сохранить в БД</button>
+
+        <h3>Список из базы данных:</h3>
+        <ul id="userList">
+            <li>Загрузка...</li>
+        </ul>
+    </div>
+
+    <!-- type="module" обязателен для импортов Firebase -->
+    <script type="module">
+        // 1. Импортируем нужные модули
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // 2. Ваша конфигурация
+        const firebaseConfig = {
+            apiKey: "AIzaSyDV_AAQ0H9y21UmzhHqtoacpcRIbXmgH58",
+            authDomain: "loloolol-8ccaf.firebaseapp.com",
+            projectId: "loloolol-8ccaf",
+            storageBucket: "loloolol-8ccaf.firebasestorage.app",
+            messagingSenderId: "470146611374",
+            appId: "1:470146611374:web:891cb4a7cb5e7090c8153f",
+            measurementId: "G-PE1VEJJ2HQ"
+        };
+
+        // 3. Инициализация
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // База данных
+        const auth = getAuth(app);    // Сервис авторизации
+        const githubProvider = new GithubAuthProvider(); // Провайдер GitHub
+
+        // ==========================================
+        // ЛОГИКА АВТОРИЗАЦИИ (GITHUB)
+        // ==========================================
+        
+        // Вход через GitHub
+        document.getElementById('githubLoginBtn').addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, githubProvider);
+                console.log("Успешный вход:", result.user);
+            } catch (error) {
+                console.error("Ошибка входа:", error);
+                alert("Ошибка входа: " + error.message + "\n(Проверьте, что вы настроили OAuth App в GitHub и Firebase)");
+            }
+        });
+
+        // Выход из аккаунта
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+        });
+
+        // Отслеживание состояния входа (срабатывает при загрузке страницы и при входе/выходе)
+        onAuthStateChanged(auth, (user) => {
+            const statusEl = document.getElementById('authStatus');
+            const loginBtn = document.getElementById('githubLoginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            if (user) {
+                // Пользователь вошел
+                statusEl.textContent = `✅ Вы вошли как: ${user.displayName || user.email}`;
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+            } else {
+                // Пользователь не вошел
+                statusEl.textContent = '❌ Статус: Не авторизован';
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+            }
+        });
+
+        // ==========================================
+        // ЛОГИКА БАЗЫ ДАННЫХ (FIRESTORE)
+        // ==========================================
+
+        async function saveToDatabase() {
+            const userValue = document.getElementById('usernameInput').value;
+            const passValue = document.getElementById('passwordInput').value;
+
+            if (!userValue || !passValue) {
+                alert("Пожалуйста, заполните оба поля!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "users"), {
+                    username: userValue,
+                    password: passValue,
+                    createdAt: new Date()
+                });
+                
+                document.getElementById('usernameInput').value = '';
+                document.getElementById('passwordInput').value = '';
+                alert("Данные успешно сохранены в базу!");
+                loadUsers();
+            } catch (error) {
+                console.error("Ошибка БД: ", error);
+                alert("Ошибка: " + error.message);
+            }
+        }
+
+        async function loadUsers() {
+            const listElement = document.getElementById('userList');
+            listElement.innerHTML = '<li>Загрузка...</li>';
+
+            try {
+                const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                listElement.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    listElement.innerHTML = '<li>Пользователей пока нет</li>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const item = doc.data();
+                    const li = document.createElement('li');
+                    li.textContent = `Логин: ${item.username} | Пароль: ${item.password}`;
+                    listElement.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Ошибка загрузки: ", error);
+                listElement.innerHTML = '<li style="color:red">Ошибка: ' + error.message + '</li>';
+            }
+        }
+
+        // Привязываем кнопки
+        document.getElementById('registerBtn').addEventListener('click', saveToDatabase);
+        
+        // Загружаем список при старте
+        loadUsers();
+    </script>
+</body>
+</html>
